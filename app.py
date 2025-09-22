@@ -111,7 +111,8 @@ def add_donation():
     
     donors = Donor.query.all()
     donation_types = DonationType.query.all()
-    return render_template('add_donation.html', donors=donors, donation_types=donation_types)
+    today = datetime.now().strftime('%Y-%m-%d')
+    return render_template('add_donation.html', donors=donors, donation_types=donation_types, today=today)
 
 @app.route('/reports')
 def reports():
