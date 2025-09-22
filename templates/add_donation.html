@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Record New Donation</h3>
+            </div>
+            <div class="card-body">
+                {% if not donors %}
+                    <div class="alert alert-warning" role="alert">
+                        <h5 class="alert-heading">No donors available!</h5>
+                        <p>You need to add at least one donor before recording donations.</p>
+                        <hr>
+                        <a href="{{ url_for('add_donor') }}" class="btn btn-warning">Add Donor First</a>
+                    </div>
+                {% elif not donation_types %}
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="alert-heading">System Error!</h5>
+                        <p>No donation types available. Please contact the administrator.</p>
+                    </div>
+                {% else %}
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="donor_id" class="form-label">Donor *</label>
+                                    <select class="form-select" id="donor_id" name="donor_id" required>
+                                        <option value="">Select a donor...</option>
+                                        {% for donor in donors %}
+                                            <option value="{{ donor.id }}">{{ donor.first_name }} {{ donor.last_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="donation_type_id" class="form-label">Donation Type *</label>
+                                    <select class="form-select" id="donation_type_id" name="donation_type_id" required>
+                                        <option value="">Select type...</option>
+                                        {% for donation_type in donation_types %}
+                                            <option value="{{ donation_type.id }}">{{ donation_type.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount ($) *</label>
+                                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="donation_date" class="form-label">Date *</label>
+                                    <input type="date" class="form-control" id="donation_date" name="donation_date" value="{{ datetime.now().strftime('%Y-%m-%d') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Optional notes about this donation"></textarea>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('donations') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Record Donation</button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
